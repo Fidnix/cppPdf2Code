@@ -1,0 +1,21 @@
+{
+  "name": "pucpdf2code",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node tests/formatter.test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "pdf-parse": "^1.1.1",
+    "zip-stream": "^5.0.1"
+  }
+}
