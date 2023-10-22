@@ -10,9 +10,9 @@ const createRandomName = require('./createRandomName')
 */
 function getMetadata(modulesArr){
     const metadata = {};
-    const proyecto = modulesArr[0].match(/(?<=\*\s*[pP]royecto:\s*)(.*)(?=\s*\n)/g);
+    const proyecto = modulesArr[0].match(/(?<=\*\s*[pP]royecto:\s*)(\S*)(?=\s*\n)/g);
     metadata.proyecto = proyecto != null? proyecto : createRandomName();
-    metadata.archivos = modulesArr.map(m=>m.match(/(?<=\*\s*(?:[aA]rchivo|[fF]ile):\s*)(.*)(?=\s*\n)/g)[0].replace(' ', ''))
+    metadata.archivos = modulesArr.map(m=>m.match(/(?<=\*\s*(?:[aA]rchivo|[fF]ile):\s*)(\S*)(?=\s*\n)/g)[0].replace(' ', ''))
     return metadata;
 }
 
