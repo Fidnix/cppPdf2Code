@@ -9,15 +9,18 @@ const splitter = require('./src/splitter');
 // codePdfParser(pdfBuffer);
 
 module.exports = async function (path, dataBuffer){
-    pdf(dataBuffer)
-        .then(data=>formatter(data.text))
-        .then(data=>splitter(data))
-        .then((data)=> packageZip(path, data))
-        .then((projectName)=>{
-            console.log('Se creó correctamente el zip'.green);
-            Promise.resolve(projectName)})
-        .catch(err=>{
-            console.error(err);
-            Promise.reject()
-        })
+    return new Promise((resolve, reject)=>{
+        pdf(dataBuffer)
+            .then(data=>formatter(data.text))
+            .then(data=>splitter(data))
+            .then((data)=> packageZip(path, data))
+            .then((projectName)=>{
+                console.log('Se creó correctamente el zip'.green);
+                resolve(projectName)
+            })
+            .catch(err=>{
+                console.error(err);
+                reject(err);
+            })
+    })
 }   
