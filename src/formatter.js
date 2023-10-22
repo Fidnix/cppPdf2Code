@@ -1,5 +1,11 @@
 const pipe = require('./pipe');
 
+/** 
+* Verifica si existe alguna ruta en el pdf que haga referencia a una ruta. La razon de este es que algunos pdf's tienen en sus cabeceras la ruta de descarga en un computador
+* @summary Verifica si tiene al menos una ruta en la cabecera, esto para manejarlo conforme corresponda
+* @param {string} data - El contenido del pdf en bruto
+* @return {Boolean} Tiene una ruta en la cabecera?
+*/
 function hasPathData(data) {
     for (let i = 0; i < data.length; i++) {
         // Windows
@@ -11,6 +17,11 @@ function hasPathData(data) {
     return false;
 }
 
+/** 
+* Filtra las lineas del pdf por codigo
+* @param {Array[string]} data - El contenido del pdf en bruto separado
+* @return {Array[string]} Contenido filtrado dejando solo el código de C++
+*/
 function filterCodeLines(data){
     const isGuaniraPattern = hasPathData(data);
     let lineNum = 1;
@@ -27,6 +38,11 @@ function filterCodeLines(data){
     })
 }
 
+/** 
+* Formatea sintácticamente cada línea de código, esto incluye: namespaces usados, return y delete, identificadores, parametros y argumentos
+* @param {Array[string]} linesArr - Son las lineas de codigo ya filtradas
+* @return {Array[string]} Líneas de código ya formateadas sintacticamente
+*/
 function sintaxFormatter(linesArr){
     const regExps = {
         dataType: '(ofstream|ifstream|int|void|double|char|float)',
@@ -56,6 +72,11 @@ function sintaxFormatter(linesArr){
     });
 }
 
+/** 
+* Añade identaciones segun corresponda
+* @param {Array[string]} codeLines - Son las lineas de codigo formateadas
+* @return {Array[string]} Un arreglo de lineas de codigo con sus respectivas identaciones
+*/
 function indentFormatter(codeLines){
     let indents = [];
     return codeLines.map((palabra)=>{
@@ -81,6 +102,11 @@ function indentFormatter(codeLines){
     })
 }
 
+/** 
+* Se encarga de hacer todo el proceso de formateo en orden
+* @param {string} rawText - Contenido del pdf en bruto
+* @return {string} Contenido del pdf ya formateado para los siguientes procesos que siguen
+*/
 module.exports = function (rawText){
     try {
         const formattedText = pipe(

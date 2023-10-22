@@ -1,6 +1,10 @@
 const createRandomName = require('./createRandomName');
 const pipe = require('./pipe');
-
+/** 
+* Divide todo el contenido formateado del pdf en módulos según los comentarios que haya
+* @param {string} formattedText - Es el contenido del pdf formateado
+* @return {Array[string]} Un arreglo de strings que hacen referencia al código de cada módulo
+*/
 module.exports = function(formattedText){
     try {
         const randomSeparator = createRandomName(32);
