@@ -41,9 +41,14 @@ module.exports = (zipPath, modulesArr)=> new Promise(async (resolve, reject)=>{
                 if(index + 1 != modulesArr.length){
                     entryFile(index+1)
                 }else{
-                    archive.pipe(fs.createWriteStream(path.join(zipPath, `${metadata.proyecto}.zip`)));
-                    archive.finish();
-                    resolve(metadata.proyecto);
+                    const zipFile = fs.createWriteStream(path.join(zipPath, `${metadata.proyecto}.zip`));
+                    zipFile.on('ready', ()=>{
+                        archive.pipe(zipFile);
+                        archive.finish();
+                    })
+                    zipFile.on('close', ()=>{
+                        resolve(metadata.proyecto);
+                    })
                 }
             }
         })
