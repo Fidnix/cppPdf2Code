@@ -51,8 +51,9 @@ const cppZipper = require('pucpdf2code');
 let ruta = '...' // Es la ruta donde se guardara el zip
 let pdfBuffer = fs.read('.../nombre_archivo.pdf') // El buffer del archivo pdf
 
-cppZipper(ruta, pdfBuffer)
-    .then((nombreProyecto)=>{ //Devuelve el nombre del proyecto
+cppZipper(pdfBuffer, [ruta]) // Si se obvia la ruta devuelve el buffer del zip
+    .then((proyectoObj)=>{ //Devuelve un objeto con la siguiente estructura
+    // proyectoObj: {proyecto: string(nombre), buffer: Buffer || null (buffer del zip si no se pasa la ruta como parametro)}
         // Tu codigo
     })
     .catch((err)=>{

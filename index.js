@@ -1,19 +1,25 @@
 const pdf = require('pdf-parse');
 const colors = require('colors');
-const packageZip = require('./src/zipper');
+const { createZipInBuffer, createZipInPath } = require('./src/zipper');
 const formatter = require('./src/formatter');
 const splitter = require('./src/splitter');
 const PrettyError = require('pretty-error');
 
-module.exports = async function (path, dataBuffer){
+module.exports = async function (dataBuffer, path = null){
     return new Promise((resolve, reject)=>{
         pdf(dataBuffer)
             .then(data=>formatter(data.text))
             .then(data=>splitter(data))
-            .then(data=> packageZip(path, data))
-            .then(projectName=>{
+            .then(data=> {
+                if(path === null){
+                    return createZipInBuffer(data)
+                }else{
+                    return createZipInPath(path, data)
+                }
+            })
+            .then(proyecto=>{
                 console.log('Se creó correctamente el zip'.green);
-                resolve(projectName)
+                resolve(proyecto)
             })
             .catch(err=>{
                 const pe = new PrettyError();

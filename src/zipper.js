@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const ZipStream = require('zip-stream');
+const AdmZip = require('adm-zip');
 const createRandomName = require('./createRandomName')
 /** 
 * Gets the metadata of an array (its project name and files name)
@@ -21,7 +22,7 @@ function getMetadata(modulesArr){
 * @param {Array[string]} modulesArr - An array that contains the files contents
 * @return {string} The project's name.
 */
-module.exports = (zipPath, modulesArr)=> new Promise(async (resolve, reject)=>{
+let createZipInPath = (zipPath, modulesArr)=> new Promise(async (resolve, reject)=>{
     const metadata = Object.freeze(getMetadata(modulesArr));
     const archive = new ZipStream();
     archive.on('error', (err)=>{
@@ -47,7 +48,10 @@ module.exports = (zipPath, modulesArr)=> new Promise(async (resolve, reject)=>{
                         archive.finish();
                     })
                     zipFile.on('close', ()=>{
-                        resolve(metadata.proyecto);
+                        resolve({
+                            'proyecto': metadata.proyecto,
+                            'buffer': null
+                        });
                     })
                 }
             }
@@ -55,6 +59,25 @@ module.exports = (zipPath, modulesArr)=> new Promise(async (resolve, reject)=>{
     }
     entryFile(0);
 })
+
+let createZipInBuffer = (modulesArr) => new Promise(async (resolve, reject)=>{
+    const metadata = Object.freeze(getMetadata(modulesArr));
+    const zip = new AdmZip();
+    
+    for(let index = 0; index < modulesArr.length; index++){
+        zip.addFile(`${metadata.proyecto}/${metadata.archivos[index]}`);
+    }
+    // console.log(zip.toBuffer())
+    resolve({
+        'proyecto': metadata.proyecto,
+        'buffer': zip.toBuffer()
+    })
+})
+
+module.exports = {
+    createZipInBuffer: createZipInBuffer,
+    createZipInPath: createZipInPath
+}
 
 // const {exec} = require('child_process');
 // async function createFiles(projectName, files){
