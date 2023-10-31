@@ -64,12 +64,9 @@ let createZipInBuffer = (modulesArr) => new Promise(async (resolve, reject)=>{
     const metadata = Object.freeze(getMetadata(modulesArr));
     const zip = new AdmZip();
     
-    console.log('Hola')
     for(let index = 0; index < modulesArr.length; index++){
-        console.log(index)
         zip.addFile(`${metadata.proyecto}/${metadata.archivos[index]}`, modulesArr[index]);
     }
-    console.log('p')
     // console.log(zip.toBuffer())
     resolve({
         'proyecto': metadata.proyecto,
